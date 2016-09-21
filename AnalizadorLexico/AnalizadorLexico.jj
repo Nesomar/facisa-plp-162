@@ -1,0 +1,121 @@
+PARSER_BEGIN(AnalizadorLexico)
+class AnalizadorLexico
+{
+	public static void main(String[] args) throws ParseException
+	{
+		try
+		{
+			AnalizadorLexico analizador = new AnalizadorLexico(System.in);
+			analizador.Programa();
+		}
+		catch(ParseException e)
+		{
+			System.out.println(e.getMessage());
+			System.out.println("Não foi possivel realizar a análise. ");
+		}
+	}	
+}
+PARSER_END(AnalizadorLexico)
+
+TOKEN:
+{
+	<MAIN: "public static void main()">{System.out.println("MAIN -> "+image);}
+	|<PROGRAMA: "programa ">{System.out.println("PROGRAMA -> "+image);}
+}
+
+/*outros Caracteres*/
+TOKEN:
+{
+	<LPAREN: "("> | <RPAREN: ")"> | <LBRACE: "{"> | <RBRACE: "}"> | <SEMICOLON: ";">
+}
+
+TOKEN:
+{
+	<INT: "int"> | <NUMBER: (["0"-"9"])+> | <IDENTIFIER: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*>	
+}
+
+SKIP:
+{
+	" " | "\t" | "\n" | "\r" | "\f"
+}
+
+/*Palavras Reservadas*/
+TOKEN:
+{
+	< AND: "and" > | < ARRAY: "array" > | < ASM: "asm" > | < BEGIN: "begin" > | < CASE: "case" > |< CONST: "const" > |< CONSTRUCTOR: "constructor" > 
+	| < DESTRUCTOR: "destructor" > |< DIV: "div" > |< DO: "do" > |< DOWNTO: "downto" > | < ELSE: "else" > |< END: "end" > |< FILE: "file" > 
+	| < FOR: "for" > |< FOWARD: "foward" > |< FUNCTION: "function" > |< GOTO: "goto" > | < IF: "if" > |< IMPLEMENTATION: "implementation" > 
+	| < IN: "in" > |< INLINE: "inline" > |< INTERFACE: "interface" > |< LABEL: "label" > | < MOD: "mod" > |< NIL: "nil" > |< NOT: "not" > 
+	| < OBJECT: "object" > |< OF: "of" > |< OR: "or" > |< PACKED: "PACKED" > | < PROCEDURE: "procedure" > |< PROGRAM: "program" > |< record: "record" > 
+	| < REPEAT: "repeat" > |< SET: "set" > |< SHL: "shl" > |< SHR: "shr" > | < STRING: "string" > |< THEN: "then" > |< TO: "to" > 
+	| < TYPE: "type" > |< UNIT: "unit" > |< UNTIL: "until" > |< USES: "uses" > | < var: "var" > |< WHILE: "while" > |< WITH: "with" > | < XOR: "xor"> 
+}
+
+/*Operadores Aritméticos*/
+TOKEN:
+{
+	
+	<SUBTRACAO: "-"> | <ADICAO: "+"> | <MULTIPLICACAO: "*"> | <DIVISAOREAL: "/"> | <RESTODIVISAOINTEIRA: "%"> 
+	
+}
+
+/*Operadores Relacionais*/
+TOKEN:
+{
+	<MAIORQUE: ">"> | <MENORQUE: "<"> | <MAIORIGUAL: ">="> | <MENORIGUAL: "<="> | <IGUAL: "="> | <DIFERENTE: "<>">
+}
+
+void Programa() :
+{}
+{
+	<PROGRAMA><IDENTIFIER><LBRACE>Principal()<RBRACE><EOF>
+}
+
+void Principal():
+{}
+{
+	<MAIN>
+	<LBRACE>Sentencas()<RBRACE>
+}
+
+void Sentencas():
+{}
+{
+		DeclaracaoLocal()
+}
+
+void DeclaracaoLocal():
+{}
+{
+	<INT><IDENTIFIER> <SEMICOLON> VS()
+}
+
+void VS():
+{}
+{
+	DeclaracaoLocal() | Sentecial() 
+}
+
+void Sentecial():
+{}
+{
+	<IF><LPAREN> Comparadores () <RPAREN><LBRACE><RBRACE>
+}
+
+void Comparadores():
+{}
+{
+	Valor()Operadores() Valor()
+}
+
+void Valor():
+{}
+{
+	<IDENTIFIER> | <NUMBER>
+}
+
+void Operadores():
+{}
+{
+	<MENORQUE>
+}
