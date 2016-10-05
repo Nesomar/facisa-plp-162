@@ -160,7 +160,7 @@ void Programa() :
 void Program():
 {}
 {
-  <PROGRAMA><IDENTIFICADOR><DPARENTE>Block()<LPARENTE><EOF>
+  <PROGRAMA><IDENTIFICADOR><VIRGULA>Block()
 }
 
 void Block():
