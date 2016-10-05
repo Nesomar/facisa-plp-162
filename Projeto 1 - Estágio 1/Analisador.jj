@@ -1,0 +1,349 @@
+/* opções */
+options {
+  STATIC = false;
+  IGNORE_CASE = true;
+}
+
+PARSER_BEGIN(Analisador) 
+
+public class Analisador {
+
+/*impressão dos tokens recebidos como entrada */
+    public void processa() throws Exception {
+        while (true) {
+            Token t = getNextToken();
+            String nomeToken = tokenImage[t.kind];
+            System.out.println(nomeToken);
+            if (t.kind == ponto_virg) /* para de ler até encontrar um ponto e vírgula */
+                break;
+        }
+    }
+
+   /* método main que recebe a expressão e chama o método acima */
+   public static void main(String[] args) {
+            System.out.print("Input:");
+            Analisador analisador = new Analisador(System.in);
+            try {
+                  analisador.processa();
+            } catch (Exception e) {
+                  System.out.println(e.getMessage());
+                  e.printStackTrace();
+            }
+      }
+}
+PARSER_END(Analisador) 
+
+/*Gramatina Lexical Inicio*/
+
+SKIP : 
+{ 
+	" "|"\n" | "\r" | "\r\n" 
+}
+
+/*Palavras Reservadas*/
+TOKEN:
+{
+	< ARRAY: "array ">{System.out.println("ARRAY -> "+image);}
+	|< ASM: "asm ">{System.out.println("ASM -> "+image);}
+	|< BEGIN: "begin ">{System.out.println("BEGIN -> "+image);}
+	|< CASE: "case "> {System.out.println("CASE -> "+image);}
+	|< CONST: "const "> {System.out.println("CONST -> "+image);}
+	|< CONSTRUCTOR: "constructor ">{System.out.println("CONSTRUCTOR -> "+image);}
+	|< DESTRUCTOR: "destructor ">{System.out.println("DESTRUCTOR -> "+image);}
+	|< DIV: "div " >{System.out.println("DIV -> "+image);}
+	|< DO: "do ">{System.out.println("DO -> "+image);}
+	|< DOWNTO: "downto ">{System.out.println("DOWNTO -> "+image);} 
+	|< ELSE: "else ">{System.out.println("ELSE -> "+image);} 
+	|< END: "end ">{System.out.println("END -> "+image);} 
+	|< FILE: "file ">{System.out.println("FILE -> "+image);} 
+	|< FOR: "for ">{System.out.println("FOR -> "+image);} 
+	|< FOWARD: "foward ">{System.out.println("FOWARD -> "+image);} 
+	|< FUNCTION: "function ">{System.out.println("FUNCTION -> "+image);}
+	|< GOTO: "goto ">{System.out.println("GOTO -> "+image);} 
+	|< IF: "if ">{System.out.println("IF -> "+image);} 
+	|< IMPLEMENTATION : "implementation ">{System.out.println("IMPLEMENTATION -> "+image);} 
+	|< IN: "in ">{System.out.println("IN -> "+image);} 
+	|< INLINE: "inline ">{System.out.println("INLINE -> "+image);} 
+	|< INTERFACE: "interface ">{System.out.println("INTERFACE -> "+image);} 
+	|< LABEL: "label ">{System.out.println("LABEL -> "+image);} 
+	|< MOD: "mod ">{System.out.println("MOD -> "+image);} 
+	|< NIL: "nil ">{System.out.println("NIL -> "+image);} 
+	|< OBJECT: "object ">{System.out.println("OBJECT -> "+image);}
+	|< OF: "of ">{System.out.println("OF -> "+image);}
+	|< PACKED: "PACKED ">{System.out.println("PACKED -> "+image);} 
+	|< PROCEDURE: "procedure ">{System.out.println("PROCEDURE -> "+image);} 
+	|< PROGRAMA: "program ">{System.out.println("PROGRAM -> "+image);} 
+	|< RECORD: "record ">{System.out.println("RECORD -> "+image);} 
+	|< REPEAT: "repeat ">{System.out.println("REPEAT -> "+image);}
+	|< READ:"read " >{System.out.println("READ -> "+image);}	
+	|< SET: "set ">{System.out.println("SET -> "+image);} 
+	|< SHL: "shl ">{System.out.println("SHL -> "+image);} 
+	|< SHR: "shr ">{System.out.println("SHR -> "+image);} 
+	|< THEN: "then ">{System.out.println("THEN -> "+image);} 
+	|< TO: "to ">{System.out.println("TO -> "+image);} 
+	|< UNIT: "unit ">{System.out.println("UNIT -> "+image);} 
+	|< UNTIL: "until ">{System.out.println("UNTIL -> "+image);} 
+	|< USES: "uses ">{System.out.println("USES -> "+image);} 
+	|< VAR: "var ">{System.out.println("VAR -> "+image);} 
+	|< WHILE: "while ">{System.out.println("WHILE -> "+image);} 
+	|< WITH: "with ">{System.out.println("WITH -> "+image);} 
+	|< XOR: "xor ">{System.out.println("XOR -> "+image);} 
+}
+
+/*Definição dos Tipos*/
+TOKEN:
+{
+	 <TYPE : "char" | "string" | "integer" | "boolean">{System.out.println("TYPE -> "+image);}
+}
+
+/*Definição de Numeros, digitos, string ,e letras etc..*/
+TOKEN:
+{
+	<DIGITOS: ["0"-"9"]>
+	|<LETRAS: ["a"-"z","A"-"Z"]>
+	|<NUMERO: (<DIGITOS>)+ > {System.out.print("NUMERO "+image+"\r\n");}
+	|<IDENTIFICADOR: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.print("IDENTIFICADOR -> "+image+"\r\n");}
+	|<STRING: ["a"-"z","A"-"Z","0"-"9"](["a"-"z","A"-"Z","0"-"9"])*>{System.out.print("STRING -> "+image+"\r\n");}
+}
+
+/*Operadores Aritméticos*/
+TOKEN:
+{
+	<OPERADOR_SOMA : "+">{System.out.println("OPERADOR_SOMA -> "+image);}
+	|<OPERADOR_SUBTRACAO : "-">{System.out.println("OPERADOR_SUBTRACAO -> "+image);}
+	|<OPERADOR_DIVISAO : "/">{System.out.println("OPERADOR_DIVISAO -> "+image);}
+	|<OPERADOR_MULTIPLICACAO : "*">{System.out.println("OPERADOR_MULTIPLICACAO -> "+image);}
+	|<OPERADOR_DECREMENTO : "--">{System.out.println("OPERADOR_DECREMENTO -> "+image);}
+	|<OPERADOR_INCREMENTO : "++">{System.out.println("OPERADOR_INCREMENTO -> "+image);}
+		
+}
+
+/*Operadores Relacionais*/
+TOKEN:
+{
+	<MAIORQUE: ">">{System.out.println("MAIORQUE -> "+image);}
+	|<MENORQUE: "<">{System.out.println("MENORQUE -> "+image);} 
+	|<MAIORIGUAL: ">=">{System.out.println("MAIORIGUAL -> "+image);} 
+	|<MENORIGUAL: "<=">{System.out.println("MENORIGUAL -> "+image);} 
+	|<IGUAL: "=">{System.out.println("IGUAL -> "+image);} 
+	|<DIFERENTE: "<>">{System.out.println("DIFERENTE -> "+image);}
+	|<ATRIBUICAO : ":=">{System.out.println("ATRIBUICAO -> "+image);}
+	|<OR: "or" >{System.out.println("OR -> "+image);}
+	|<AND: "and">{System.out.println("AND -> "+image);}
+	|<NOT: "not">{System.out.println("NOT -> "+image);}
+}
+
+/*Outros Operadores*/
+TOKEN:
+{
+	<LPARENTE: "(" >{System.out.println("LPARENTE -> "+image);}
+	|<DPARENTE: ")" >{System.out.println("DPARENTE -> "+image);}
+	|<LCOLCHETES: "[" >{System.out.println("LCOLCHETES -> "+image);}
+	|<DCOLCHETES: "]" >{System.out.println("DCOLCHETES -> "+image);}
+	|<DOIS_PONTOS: ":" >{System.out.println("DOIS_PONTOS -> "+image);}
+	|<ASPAS_SIMPLES: "'" >{System.out.println("ASPAS_SIMPLES -> "+image);}
+	|<ASPAS_DUPLA: "\"" >{System.out.println("ASPAS_DUPLA -> "+image);}
+	|<PONTO_VIRGULA: ";" >{System.out.println("PONTO_VIRGULA -> "+image);}
+	|<VIRGULA: "," >{System.out.println("VIRGULA -> "+image);}
+	|<PONTO: "." >{System.out.println("PONTO -> "+image);}
+	|<PONTOS: ".. " >{System.out.println("PONTOS -> "+image);}
+}
+/*Gramatina Lexical Inicio*/
+
+/*Sintatica INICIO*/
+void Programa() :
+{}
+{
+	Program()<EOF>
+}
+
+void Program():
+{}
+{
+  <PROGRAMA><IDENTIFICADOR><DPARENTE>Block()<LPARENTE><EOF>
+}
+
+void Block():
+{}
+{
+  Variable_Declaration_Part()Statement_Part()
+}
+
+void Variable_Declaration_Part():
+{}
+{
+	<EOF> | <VAR>Variable_Declaration()<PONTO_VIRGULA> (Variable_Declaration()<PONTO_VIRGULA>)*
+}
+
+void Variable_Declaration():
+{}
+{
+	<IDENTIFICADOR> (<VIRGULA><IDENTIFICADOR>)*<DOIS_PONTOS>Type()
+}
+
+void Type():
+{}
+{
+	<TYPE> | ArrayType()
+}
+
+void ArrayType():
+{}
+{
+	<ARRAY><LCOLCHETES>IndexRange()<DCOLCHETES><OF><TYPE>
+}
+
+void IndexRange():
+{}
+{
+	<NUMERO><PONTOS><NUMERO>
+}
+
+void Statement_Part():
+{}
+{
+	Compound_Statement()
+}
+
+void Compound_Statement():
+{}
+{
+	<BEGIN>Statement()(<PONTO_VIRGULA>Statement())*<END>
+}
+
+void Statement():
+{}
+{
+	Simple_Statement() | Structured_Statement()
+}
+
+void Simple_Statement():
+{}
+{
+	Assignment_Statement() | Read_Statement() 
+}
+
+void Assignment_Statement():
+{}
+{
+	Variable()<ATRIBUICAO>Expression()
+}
+
+void Read_Statement():
+{}
+{
+	<READ><LPARENTE>Variable() (<VIRGULA>Variable())*<DPARENTE>
+}
+
+void Structured_Statement():
+{}
+{
+  	Compound_Statement() | If_Statement() | While_Statement()
+}
+
+void If_Statement():
+{}
+{
+  	<IF>Expression()<THEN>Statement()If_Statement_Fatoracao()
+}
+
+void If_Statement_Fatoracao():
+{}
+{
+  	<ELSE>Statement() | {}
+}
+
+void While_Statement():
+{}
+{
+  	<WHILE>Expression()<DO>Statement()
+}
+
+void Expression():
+{}
+{
+  	Simple_Expression()Expression_Fatoracao()
+}
+
+void Expression_Fatoracao():
+{}
+{
+	Relational_Operator()Simple_Expression() | {}
+}
+
+void Simple_Expression():
+{}
+{
+  	Sign()Term() (Adding_Operator()Term())*
+}
+
+void Term():
+{}
+{
+	Factor() (Multiplying_Operator()Factor())*
+}
+
+void Factor():
+{}
+{
+  	Variable() | Constant() |<LPARENTE>Expression()<DPARENTE> |<NOT>Factor()
+}
+
+void Relational_Operator():
+{}
+{
+  	<IGUAL> | <DIFERENTE> | <MENORQUE> | <MENORIGUAL> | <MAIORIGUAL> | <MAIORQUE> | <OR> | <AND>
+}
+
+void Sign():
+{}
+{
+  	<OPERADOR_SOMA> | <OPERADOR_SUBTRACAO> | {}
+}
+
+void Adding_Operator():
+{}
+{
+  	<OPERADOR_SOMA> | <OPERADOR_SUBTRACAO>
+}
+
+void Multiplying_Operator():
+{}
+{
+  	<OPERADOR_MULTIPLICACAO> | <OPERADOR_DIVISAO>
+}
+
+void Variable():
+{}
+{
+  	<IDENTIFICADOR>Indexed_Variable()
+}
+
+void Indexed_Variable():
+{}
+{
+  	<LCOLCHETES>Expression()<DCOLCHETES> | {}
+}
+
+void Constant():
+{}
+{
+  	<NUMERO> | Character_Constant() | <IDENTIFICADOR>
+}
+
+void Letter_or_Digit():
+{}
+{
+	<LETRAS> | <DIGITOS>
+}
+
+void Character_Constant():
+{}
+{
+  	<ASPAS_SIMPLES>Letter_or_Digit()<ASPAS_SIMPLES> | <ASPAS_DUPLA>Letter_or_Digit()(Letter_or_Digit())*<ASPAS_DUPLA>
+}
+
+/*FIM SINTATICO*/
+
+
+
